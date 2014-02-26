@@ -245,13 +245,9 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier for the method used to complete the action</Cm>
       </Cl>
-      <Cl au="0" df="" nm="SamplingFeatureID" nu="1">
+      <Cl au="0" df="" nm="SamplingFeatureID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Foreign key identifier for the SamplingFeature on which or at which the action was completed</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="EquipmentID" nu="1">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for a piece of equipment that was used to complete the action</Cm>
       </Cl>
       <Cl au="0" df="" nm="DirectiveID" nu="1">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
@@ -260,10 +256,6 @@
       <Cl au="0" df="" nm="ActionNotes" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
         <Cm>Text notes that accompany the action</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="ParentActionID" nu="1">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Unique identifier of the action that is the parent of this action</Cm>
       </Cl>
       <Fk deAc="3" nm="fk_Actions_Directives" prLkCl="DirectiveID" upAc="3">
         <PrTb mn="0" nm="Directives" oe="1" sch="ODM2Core" zr="0"/>
@@ -274,11 +266,6 @@
         <PrTb mn="0" nm="Methods" oe="1" sch="ODM2Core" zr="0"/>
         <CdTb mn="1" nm="Actions" oe="0" sch="ODM2Core" zr="1"/>
         <ClPr cdCl="MethodID" prCl="MethodID"/>
-      </Fk>
-      <Fk deAc="3" nm="fk_Actions_ParentChild" prLkCl="ActionID" upAc="3">
-        <PrTb mn="0" nm="Actions" oe="1" sch="ODM2Core" zr="0"/>
-        <CdTb mn="1" nm="Actions" oe="0" sch="ODM2Core" zr="1"/>
-        <ClPr cdCl="ParentActionID" prCl="ActionID"/>
       </Fk>
       <Fk deAc="3" nm="fk_Actions_SamplingFeatures" prLkCl="SamplingFeatureID" upAc="3">
         <PrTb mn="0" nm="SamplingFeatures" oe="1" sch="ODM2Core" zr="0"/>
@@ -2200,38 +2187,6 @@
     <CustomTypes/>
   </Sch>
   <Sch Cm="Information about sensor deployment and management for in situ data." nm="ODM2Sensors">
-    <Tbl UsSo="1" nm="DataloggerFileColumns">
-      <Cm>Informations about the data columns in a datalogger output file</Cm>
-      <TblOpts/>
-      <Pk ClNs="ColumnID" nm="pkDataloggerFileColumns"/>
-      <Cl au="1" df="" nm="ColumnID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Primary key identifier for the datalogger column</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="DataloggerFileID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for the datalogger output file in which the column appears</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="DeploymentMeasuredVariableID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for the deployment measured variable that is contained within the column</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="ColumnLabel" nu="0">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
-        <Cm>Text label for the column as it appears in the datalogger output file</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="ColumnDescription" nu="1">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
-        <Cm>Text description for the column</Cm>
-      </Cl>
-      <Fk deAc="3" nm="fk_DataloggerFileColumns_DataLoggerFiles" prLkCl="DataloggerFileID" upAc="3">
-        <PrTb mn="0" nm="DataLoggerFiles" oe="1" sch="ODM2Sensors" zr="0"/>
-        <CdTb mn="1" nm="DataloggerFileColumns" oe="0" sch="ODM2Sensors" zr="1"/>
-        <ClPr cdCl="DataloggerFileID" prCl="DataloggerFileID"/>
-      </Fk>
-      <UniqueConstraints/>
-      <SchTrHis/>
-    </Tbl>
     <Tbl UsSo="1" nm="DataLoggerFiles">
       <Cm>Destibes datalogger files created by a deployment action</Cm>
       <TblOpts/>
@@ -2240,9 +2195,9 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Primary key identifier for the datalogger file</Cm>
       </Cl>
-      <Cl au="0" df="" nm="ActionID" nu="0">
+      <Cl au="0" df="" nm="ProgramID" nu="1">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for the deployment Action that created the datalogger output file</Cm>
+        <Cm>Foreign key identifier for the datalogger program that generates the datalogger file</Cm>
       </Cl>
       <Cl au="0" df="" nm="DataloggerFileName" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
@@ -2256,19 +2211,10 @@
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>File path or URL to the datalogger output file</Cm>
       </Cl>
-      <Cl au="0" df="" nm="ProgramID" nu="1">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for the datalogger program used to create the datalogger output file</Cm>
-      </Cl>
       <Fk deAc="3" nm="fk_DataLoggerFiles_DataloggerProgramFiles" prLkCl="ProgramID" upAc="3">
         <PrTb mn="0" nm="DataloggerProgramFiles" oe="1" sch="ODM2Sensors" zr="0"/>
         <CdTb mn="1" nm="DataLoggerFiles" oe="0" sch="ODM2Sensors" zr="1"/>
         <ClPr cdCl="ProgramID" prCl="ProgramID"/>
-      </Fk>
-      <Fk deAc="3" nm="fk_DataLoggerFiles_DeploymentActions" prLkCl="ActionID" upAc="3">
-        <PrTb mn="0" nm="DeploymentActions" oe="1" sch="ODM2Sensors" zr="0"/>
-        <CdTb mn="1" nm="DataLoggerFiles" oe="0" sch="ODM2Sensors" zr="1"/>
-        <ClPr cdCl="ActionID" prCl="ActionID"/>
       </Fk>
       <UniqueConstraints/>
       <SchTrHis>
@@ -2322,10 +2268,6 @@
         <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
         <Cm>A text description of the deployment</Cm>
       </Cl>
-      <Cl au="0" df="" nm="ConfigurationActionID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-        <Cm>Foreign key identifier for the configuration action associated with the deployment</Cm>
-      </Cl>
       <Cl au="0" df="" nm="DeploymentSchematicFilePath" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>File path of of a file containing a schematic of the deployment.</Cm>
@@ -2360,6 +2302,18 @@
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
         <Cm>Units of the deployment measured variable as recorded in the datalogger output file</Cm>
       </Cl>
+      <Cl au="0" df="" nm="DataloggerFileID" nu="1">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+        <Cm>Foreign key identifier of the datalogger file in which the measured variable is recorded</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="ColumnLabel" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+        <Cm>Text label of the column within the datalogger file in which the measured variable is recorded</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="ColumnDescription" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
+        <Cm>Text description of the column within the datalogger file in which the measured variable is recorded</Cm>
+      </Cl>
       <Cl au="0" df="" nm="Equation" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
         <Cm>Text of the equation used to generate the output variable - if needed</Cm>
@@ -2386,7 +2340,13 @@
       </Cl>
       <Cl au="0" df="" nm="Notes" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="500" sc="null" sg="1" un="0"/>
+        <Cm>Text notes about the deployment measured variable</Cm>
       </Cl>
+      <Fk deAc="3" nm="fk_DeploymentMeasuredVariables_DataLoggerFiles" prLkCl="DataloggerFileID" upAc="3">
+        <PrTb mn="0" nm="DataLoggerFiles" oe="1" sch="ODM2Sensors" zr="0"/>
+        <CdTb mn="1" nm="DeploymentMeasuredVariables" oe="0" sch="ODM2Sensors" zr="1"/>
+        <ClPr cdCl="DataloggerFileID" prCl="DataloggerFileID"/>
+      </Fk>
       <Fk deAc="3" nm="fk_DeploymentMeasuredVariables_DeploymentActions" prLkCl="ActionID" upAc="3">
         <PrTb mn="0" nm="DeploymentActions" oe="1" sch="ODM2Sensors" zr="0"/>
         <CdTb mn="1" nm="DeploymentMeasuredVariables" oe="0" sch="ODM2Sensors" zr="1"/>
@@ -2478,7 +2438,6 @@
     <FkGl bkCl="ff000000" nm="ODM2Annotations.SamplingFeatureAnnotations.fk_SamplingFeatureAnnotations_Annotations"/>
     <FkGl bkCl="ff000000" nm="ODM2Annotations.SamplingFeatureAnnotations.fk_SamplingFeatureAnnotations_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Results.ResultValues.fk_ResultValues_Results"/>
@@ -2534,7 +2493,6 @@ single foreign key column.</Note>
     <FkGl bkCl="ff000000" nm="ODM2Core.ActionPeople.fk_ActionPeople_Roles"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Directives"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_People"/>
@@ -2555,6 +2513,12 @@ single foreign key column.</Note>
 to allow for Catalog implementations.
 Also, DataValues are stored in 
 different tables according to the ResultsSetType</Note>
+      <Note bkCl="ffffffe6" x="23" y="570">A person does not need to be 
+associated with an Organization,
+but, an Affiliation record must
+be created for each person because
+that is how people get linked to 
+actions.</Note>
       <Note bkCl="ffffffe6" x="575" y="47">An ObservationAct is 
 the only ActionType that 
 can produce a ResultSet.
@@ -2591,12 +2555,6 @@ ObservationActs from ResultsSets:
 1. Allows Results for many Variables
     from each ObservationAct 
 2. Allows for other ActionTypes</Note>
-      <Note bkCl="ffffffe6" x="23" y="570">A person does not need to be 
-associated with an Organization,
-but, an Affiliation record must
-be created for each person because
-that is how people get linked to 
-actions.</Note>
     </Notes>
     <Zones>
       <Zone bkCl="ffece9d8" h="608" nm="Observations" w="296" x="547" y="173"/>
@@ -2694,7 +2652,6 @@ DataSetTopicCategoryCV</Note>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="CalibrationEquations" x="388" y="745"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="CalibrationAction_Standards" x="37" y="892"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="MaintenenceActions" x="649" y="639"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.CalibrationAction_Standards.fk_CalibrationAction_Standards_CalibrationActions"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.CalibrationAction_Standards.fk_CalibrationAction_Standards_CalibrationStandards"/>
@@ -2765,7 +2722,6 @@ a 1 to 1 or 1 to 0 relationship with Actions.</Note>
     <TbGl bkCl="ffd7cdb8" sch="ODM2ExtensionProperties" tbl="ActionExtensionPropertyValues" x="223" y="360"/>
     <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Variables" x="1078" y="25"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Variables"/>
@@ -2886,7 +2842,6 @@ similar to ExternalIdentifiers.</Note>
     <FkGl bkCl="ff000000" nm="ODM2Core.ActionPeople.fk_ActionPeople_Roles"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Directives"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_People"/>
@@ -3070,7 +3025,6 @@ accomodated by a coverage?
     <TbGl bkCl="ffd7cdb8" sch="ODM2Samples" tbl="BatchSampleLines" x="937" y="569"/>
     <TbGl bkCl="ffd7cdb8" sch="ODM2Samples" tbl="SamplePreparationAction" x="285" y="629"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_SamplingFeatures"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.Equipment.fk_Equipment_ParentChild"/>
@@ -3171,8 +3125,8 @@ Sampling Model: https://www.seegrid.csiro.au/wiki/AppSchemas/ObservationsAndSamp
       <ErNotation>DbwErNotation</ErNotation>
       <svg path=""/>
     </DiaProps>
-    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DataLoggerFiles" x="836" y="672"/>
-    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DeploymentActions" x="814" y="519"/>
+    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DataLoggerFiles" x="1060" y="857"/>
+    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DeploymentActions" x="804" y="563"/>
     <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Actions" x="525" y="487"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="Equipment" x="38" y="223"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="InstrumentOutputVariables" x="727" y="316"/>
@@ -3180,18 +3134,16 @@ Sampling Model: https://www.seegrid.csiro.au/wiki/AppSchemas/ObservationsAndSamp
     <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="Photos" x="590" y="712"/>
     <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Methods" x="602" y="46"/>
     <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Organizations" x="78" y="40"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="RelatedActions" x="349" y="717"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="RelatedActions" x="314" y="706"/>
     <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Variables" x="849" y="44"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="ActionEquipment" x="210" y="509"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="MaintenenceActions" x="367" y="354"/>
-    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DataloggerProgramFiles" x="816" y="834"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="People" x="43" y="838"/>
-    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DataloggerFileColumns" x="1150" y="726"/>
-    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DeploymentMeasuredVariables" x="1144" y="503"/>
+    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DataloggerProgramFiles" x="653" y="862"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="People" x="41" y="896"/>
+    <TbGl bkCl="fffb85e0" sch="ODM2Sensors" tbl="DeploymentMeasuredVariables" x="1122" y="593"/>
     <TbGl bkCl="fffad28d" sch="ODM2Equipment" tbl="EquipmentModels" x="399" y="178"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Units" x="1136" y="384"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Units" x="1163" y="333"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
-    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_ParentChild"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Methods.fk_Methods_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Organizations.fk_Organizations_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.RelatedActions.fk_RelatedActions_Actions"/>
@@ -3208,17 +3160,16 @@ Sampling Model: https://www.seegrid.csiro.au/wiki/AppSchemas/ObservationsAndSamp
     <FkGl bkCl="ff000000" nm="ODM2Equipment.InstrumentOutputVariables.fk_InstrumentOutputVariables_Units"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.InstrumentOutputVariables.fk_InstrumentOutputVariables_Variables"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.MaintenenceActions.fk_MaintenenceActions_Actions"/>
-    <FkGl bkCl="ff000000" nm="ODM2Sensors.DataloggerFileColumns.fk_DataloggerFileColumns_DataLoggerFiles"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DataLoggerFiles.fk_DataLoggerFiles_DataloggerProgramFiles"/>
-    <FkGl bkCl="ff000000" nm="ODM2Sensors.DataLoggerFiles.fk_DataLoggerFiles_DeploymentActions"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DataloggerProgramFiles.fk_DataloggerProgramFiles_People"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DeploymentActions.fk_DeploymentActions_Actions"/>
+    <FkGl bkCl="ff000000" nm="ODM2Sensors.DeploymentMeasuredVariables.fk_DeploymentMeasuredVariables_DataLoggerFiles"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DeploymentMeasuredVariables.fk_DeploymentMeasuredVariables_DeploymentActions"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DeploymentMeasuredVariables.fk_DeploymentMeasuredVariables_InstrumentOutputVariables"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.DeploymentMeasuredVariables.fk_DeploymentMeasuredVariables_Units"/>
     <FkGl bkCl="ff000000" nm="ODM2Sensors.Photos.fk_Photos_Events"/>
     <Notes>
-      <Note bkCl="ffffffe6" x="1431" y="30">Can SensorDeployment be an ObservationAct,
+      <Note bkCl="ffffffe6" x="1394" y="418">Can SensorDeployment be an ObservationAct,
 in which the Results table gets new rows 
 (one for each variable) but for which there are 
 not yet any data values?
@@ -3230,13 +3181,15 @@ Actions in the core, this bridge table
 gets it out of the core and allows for
 multiple pieces of equipment to be 
 used for one Action.</Note>
-      <Note bkCl="ffffffe6" x="303" y="800">RelatedActions is required to support
+      <Note bkCl="ffffffe6" x="283" y="784">RelatedActions is required to support
 the types and hierarchies of relationships 
-needed in the Sensors extension.  </Note>
+needed in the Sensors extension.  It 
+replaces ParentActionID in the Actions
+entity.</Note>
     </Notes>
     <Zones/>
   </Dgm>
-  <RnmMgr NxRnmId="369">
+  <RnmMgr NxRnmId="370">
     <RnmCh ObjCls="Schema" ParCls="Database" ParNme="ODM2" SupCls="" SupNme="">
       <Rnm id="1" nNm="ODM2Core" oNm="schemaA"/>
     </RnmCh>
@@ -4111,6 +4064,9 @@ needed in the Sensors extension.  </Note>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="MaintenenceActions" SupCls="Schema" SupNme="ODM2Equipment">
       <Rnm id="367" nNm="MaintenanceReason" oNm="FactoryServiceReason"/>
     </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="DeploymentVariables" SupCls="Schema" SupNme="ODM2Sensors">
+      <Rnm id="369" nNm="ActionID" oNm="DeploymentActionID"/>
+    </RnmCh>
   </RnmMgr>
   <DbDocOptionMgr>
     <BasicOptionMgr>
@@ -4128,17 +4084,14 @@ needed in the Sensors extension.  </Note>
     </BasicOptionMgr>
   </DbDocOptionMgr>
   <OpenEditors>
-    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Sensors" selected="1"/>
     <OpenEditor ClsNm="Diagram" fqn="null.ODM2Equipment" selected="0"/>
+    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Sensors" selected="1"/>
   </OpenEditors>
   <TreePaths>
     <TreePath/>
     <TreePath>/Schemas (11)</TreePath>
-    <TreePath>/Schemas (11)/ODM2Core</TreePath>
-    <TreePath>/Schemas (11)/ODM2Core/Tables (18)</TreePath>
-    <TreePath>/Schemas (11)/ODM2Equipment</TreePath>
-    <TreePath>/Schemas (11)/ODM2Equipment/Tables (11)</TreePath>
     <TreePath>/Schemas (11)/ODM2Sensors</TreePath>
+    <TreePath>/Schemas (11)/ODM2Sensors/Tables (5)</TreePath>
     <TreePath>/Diagrams (12)</TreePath>
   </TreePaths>
 </Db>
