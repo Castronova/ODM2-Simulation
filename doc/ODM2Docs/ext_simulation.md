@@ -1,0 +1,22 @@
+ODM2 Extensions:  Simulations
+==============================
+The optional Simulations extension for ODM2 enables users to couple an instance of ODM2 with a modeling/simulation system for storing metadata about models, model inputs, and Results output by model Simulations.
+
+### Models
+In the Simulation extension, metadata about Models is encoded in the **Models** entity. Models are the computer programs used to run simulations. A single Model may be used to run many Simulations.
+
+### Simulation Actions
+In the Simulations extension, model Simulations are specialized Actions. Details of a Simulation Action are stored in the **Simulations** entity.  A Simulation can have a Name and Description along with a link to the Model that was run. Additionally, information about the time step used for the simulation can be encoded. Simulations also have beginning and ending dates, which are the beginning and ending dates of the time period for which the Simulation was run. Additionally, since Simulations are Actions, the date on which the Simulation was actually executed and linkages to the Person who executed the Simulation can be encoded in the metadata for the Action. The Method associated a Simulation Action should appropriately describe the Simulation Action (e.g., MethodTypeCV = "Model Simulation", MethodName = "Simulation using Model X", MethodDescription = "Simulation of streamflow in X watershed using Model Y").
+
+### Simulation Inputs
+Simulation inputs may be ODM2 Results of multiple ResultTypes. These are existing data stored in an ODM2 instance that are Results of either previous observations or other Model Simulation Results. Inputs to a Model Simulation are grouped using the ODM2 **Datasets** entity. A set of ODM2 Results that serve as inputs to a particular Model Simulation are grouped into a single DataSet, which is then linked to the particular Simulation for which they serve as inputs via a foreign key attribute in the Simulations entity called **InputDatasetID**. A single Simulation input DataSet may be reused for many different Simulations (e.g., in the case of a calibration exercise, a model sensitivity analysis, or where multiple simulations use different models but the same inputs).  However, a single Simulation has only one input DataSet.
+
+### Simulation Outputs
+Simulation outputs (e.g., the data values output by the Simulation) are Results and are written to the Results and ResultValues entities as Results of the Simulation Action. A single Simulation Action may produce Results of multiple different ResultTypes at or on multiple different SamplingFeatures. For example, a streamflow model my produce a time series of streamflow output at many different output locations, which would be stored as Site SamplingFeatures in ODM2. Simulation Results can also grouped into a DataSet, which would make them easier to identify. However, a single Simulation should have only one output DataSet. Linkage from a Simulation Action to it's Results and the DataSet that groups those Results is made through the Actions, FeatureActions, Results, and DataSets entities. The Simulations entity does not link directly to Results or DataSets to avoid a circular reference in the information model and to avoid the possibility of inconsistent data. As Simulation input DataSet can be associated with one or more Simulation output DataSets via the ODM2 Related DataSets entity.
+
+### Model Parameter Values
+Model parameter values may also be input to ODM2 to serve as inputs to a Model Simulation. Model parameters are included as Results that may have values that vary in time over the course of a simulation (e.g., parameters that have values that vary by season). Model parameters will typically have ResultTypes with single values, but some parameters may be specified as time series Results. The Action associated with the Result that is the Model parameter value can specify how that parameter value was created (e.g., it was measured, it was estimated by doing X, or it was taken from the literature, etc.). Like Model input data, parameter values can be grouped into the ODM2 DataSet that serves as the input to a simulation. In the case of calibration activities or sensitivity analyses where values of model parameters are varied, each parameter value that is added to an ODM2 instance must have a separate Action associated with it.
+
+### Related Simulations
+As Simulations are specialized Actions, relationships among Simulations can be expressed via the RelatedActions entity. 
+
