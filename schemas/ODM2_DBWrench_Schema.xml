@@ -23,17 +23,9 @@
       <UniqueConstraints/>
       <SchTrHis/>
     </Tbl>
-    <Tbl UsSo="1" nm="Coupling">
+    <Tbl UsSo="1" nm="Models">
       <TblOpts/>
-      <Cl au="0" df="" nm="Id" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-      </Cl>
-      <UniqueConstraints/>
-      <SchTrHis/>
-    </Tbl>
-    <Tbl UsSo="1" nm="Model">
-      <TblOpts/>
-      <Pk ClNs="ModelID" nm="pkModel"/>
+      <Pk ClNs="ModelID" nm="pkModels"/>
       <Cl au="0" df="" nm="ModelID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
@@ -43,6 +35,34 @@
       <Cl au="0" df="" nm="Description" nu="0">
         <DT arr="0" ds="Char" en="" id="1" ln="500" sc="null" sg="1" un="0"/>
       </Cl>
+      <UniqueConstraints/>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="RelatedModels">
+      <TblOpts/>
+      <Pk ClNs="RelationID" nm="pkRelatedModels"/>
+      <Cl au="0" df="" nm="RelationID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="ModelID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="RelationshipTypeCV" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="255" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="RelatedModelID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Fk deAc="3" nm="fk_RelatedModels_Models" prLkCl="ModelID" upAc="3">
+        <PrTb mn="0" nm="Models" oe="1" sch="ODM2 Simulation" zr="0"/>
+        <CdTb mn="1" nm="RelatedModels" oe="0" sch="ODM2 Simulation" zr="1"/>
+        <ClPr cdCl="ModelID" prCl="ModelID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_RelatedModels_Models2" prLkCl="ModelID" upAc="3">
+        <PrTb mn="0" nm="Models" oe="1" sch="ODM2 Simulation" zr="0"/>
+        <CdTb mn="1" nm="RelatedModels" oe="0" sch="ODM2 Simulation" zr="1"/>
+        <ClPr cdCl="RelatedModelID" prCl="ModelID"/>
+      </Fk>
       <UniqueConstraints/>
       <SchTrHis/>
     </Tbl>
@@ -91,35 +111,13 @@
       <UniqueConstraints/>
       <SchTrHis/>
     </Tbl>
-    <Tbl UsSo="1" nm="SimulationActions">
-      <TblOpts/>
-      <Pk ClNs="SimulationActionID" nm="pkSimulationActions"/>
-      <Cl au="0" df="" nm="SimulationActionID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-      </Cl>
-      <Cl au="0" df="" nm="SimulationID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-      </Cl>
-      <Cl au="0" df="" nm="ActionID" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-      </Cl>
-      <Fk deAc="3" nm="fk_SimulationActions_Actions" prLkCl="ActionID" upAc="3">
-        <PrTb mn="0" nm="Actions" oe="1" sch="ODM2Core" zr="0"/>
-        <CdTb mn="1" nm="SimulationActions" oe="0" sch="ODM2 Simulation" zr="1"/>
-        <ClPr cdCl="SimulationActionID" prCl="ActionID"/>
-      </Fk>
-      <Fk deAc="3" nm="fk_SimulationActions_Simulations" prLkCl="SimulationID" upAc="3">
-        <PrTb mn="0" nm="Simulations" oe="1" sch="ODM2 Simulation" zr="0"/>
-        <CdTb mn="1" nm="SimulationActions" oe="0" sch="ODM2 Simulation" zr="1"/>
-        <ClPr cdCl="SimulationActionID" prCl="SimulationID"/>
-      </Fk>
-      <UniqueConstraints/>
-      <SchTrHis/>
-    </Tbl>
     <Tbl UsSo="1" nm="Simulations">
       <TblOpts/>
       <Pk ClNs="SimulationID" nm="pkSimulations"/>
       <Cl au="0" df="" nm="SimulationID" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="ActionID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="SimulationName" nu="0">
@@ -149,10 +147,28 @@
       <Cl au="0" df="" nm="TimeStepUnitsID" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
+      <Cl au="0" df="" nm="InputDatasetID" nu="1">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
       <Fk deAc="3" nm="fk_SimulationActions_Simulations" prLkCl="ModelID" upAc="3">
-        <PrTb mn="0" nm="Model" oe="1" sch="ODM2 Simulation" zr="0"/>
+        <PrTb mn="0" nm="Models" oe="1" sch="ODM2 Simulation" zr="0"/>
         <CdTb mn="1" nm="Simulations" oe="0" sch="ODM2 Simulation" zr="1"/>
         <ClPr cdCl="ModelID" prCl="ModelID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_Simulations_Actions" prLkCl="ActionID" upAc="3">
+        <PrTb mn="0" nm="Actions" oe="1" sch="ODM2Core" zr="0"/>
+        <CdTb mn="0" nm="Simulations" oe="1" sch="ODM2 Simulation" zr="1"/>
+        <ClPr cdCl="ActionID" prCl="ActionID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_Simulations_DataSets" prLkCl="DataSetID" upAc="3">
+        <PrTb mn="0" nm="DataSets" oe="1" sch="ODM2Core" zr="0"/>
+        <CdTb mn="1" nm="Simulations" oe="0" sch="ODM2 Simulation" zr="1"/>
+        <ClPr cdCl="InputDatasetID" prCl="DataSetID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_Simulations_Units" prLkCl="UnitsID" upAc="3">
+        <PrTb mn="0" nm="Units" oe="1" sch="ODM2Core" zr="0"/>
+        <CdTb mn="1" nm="Simulations" oe="0" sch="ODM2 Simulation" zr="1"/>
+        <ClPr cdCl="TimeStepUnitsID" prCl="UnitsID"/>
       </Fk>
       <UniqueConstraints/>
       <SchTrHis/>
@@ -2817,15 +2833,15 @@
     <CustomTypes/>
   </Sch>
   <Dgm nm="ODM2 Simulation">
-    <RnCf ClkAct="false" FtSz="9" lkStgy="OffsetDirect" zm="0.75">
+    <RnCf ClkAct="false" FtSz="9" lkStgy="OffsetDirect" zm="1.0">
       <VbCfg>
         <Fg ky="Auto Number" vl="0"/>
         <Fg ky="Check" vl="0"/>
         <Fg ky="Comment" vl="0"/>
-        <Fg ky="Data Type" vl="1"/>
+        <Fg ky="Data Type" vl="0"/>
         <Fg ky="Default" vl="0"/>
         <Fg ky="ENUM Values" vl="0"/>
-        <Fg ky="Length" vl="1"/>
+        <Fg ky="Length" vl="0"/>
         <Fg ky="Name" vl="1"/>
         <Fg ky="Nullable" vl="0"/>
         <Fg ky="Schema Name" vl="0"/>
@@ -2833,42 +2849,56 @@
       </VbCfg>
     </RnCf>
     <DiaProps>
-      <Show AllCols="1" FkCols="1" FkNms="1" PkCols="1"/>
+      <Show AllCols="1" FkCols="1" FkNms="0" PkCols="1"/>
       <ErNotation>DbwErNotation</ErNotation>
       <svg path=""/>
     </DiaProps>
-    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Model" x="1831" y="73"/>
-    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Simulations" x="1772" y="184"/>
-    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Simulation.SamplingFeatures" x="2345" y="72"/>
-    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Conversion" x="1078" y="474"/>
-    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Coupling" x="1107" y="642"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="SamplingFeatures" x="1387" y="594"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Results" x="1382" y="237"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Organizations" x="1961" y="699"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="People" x="1993" y="605"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Affiliations" x="2273" y="590"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="FeatureActions" x="1442" y="481"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Units" x="1437" y="55"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Variables" x="1182" y="36"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="ActionBy" x="2285" y="479"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Actions" x="1795" y="463"/>
-    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="RelatedActions" x="1708" y="619"/>
-    <TbGl bkCl="ffff9999" sch="ODM2 Simulation" tbl="SimulationActions" x="1815" y="353"/>
-    <FkGl bkCl="ff000000" nm="ODM2 Simulation.SimulationActions.fk_SimulationActions_Actions"/>
-    <FkGl bkCl="ff000000" nm="ODM2 Simulation.SimulationActions.fk_SimulationActions_Simulations"/>
+    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Models" x="751" y="21"/>
+    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Simulations" x="614" y="102"/>
+    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="Conversion" x="982" y="160"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="SamplingFeatures" x="253" y="436"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Results" x="44" y="186"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Organizations" x="707" y="496"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="People" x="1042" y="379"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Affiliations" x="935" y="479"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="FeatureActions" x="370" y="344"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Units" x="196" y="48"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Variables" x="21" y="46"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="ActionBy" x="857" y="377"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Actions" x="609" y="342"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="RelatedActions" x="881" y="292"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="DataSets" x="368" y="137"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="DataSetsResults" x="385" y="262"/>
+    <TbGl bkCl="ff009999" sch="ODM2Provenance" tbl="RelatedResults" x="12" y="406"/>
+    <TbGl bkCl="ff009999" sch="ODM2Provenance" tbl="RelatedDatasets" x="395" y="9"/>
+    <TbGl bkCl="ffff9999" sch="ODM2Core" tbl="Methods" x="497" y="499"/>
+    <TbGl bkCl="ff6666ff" sch="ODM2 Simulation" tbl="RelatedModels" x="946" y="21"/>
+    <FkGl bkCl="ff000000" nm="ODM2 Simulation.RelatedModels.fk_RelatedModels_Models"/>
+    <FkGl bkCl="ff000000" nm="ODM2 Simulation.RelatedModels.fk_RelatedModels_Models2"/>
     <FkGl bkCl="ff000000" nm="ODM2 Simulation.Simulations.fk_SimulationActions_Simulations"/>
+    <FkGl bkCl="ff000000" nm="ODM2 Simulation.Simulations.fk_Simulations_Actions"/>
+    <FkGl bkCl="ff000000" nm="ODM2 Simulation.Simulations.fk_Simulations_DataSets"/>
+    <FkGl bkCl="ff000000" nm="ODM2 Simulation.Simulations.fk_Simulations_Units"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.ActionBy.fk_ActionPeople_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.ActionBy.fk_ActionPeople_Affiliations"/>
+    <FkGl bkCl="ff000000" nm="ODM2Core.Actions.fk_Actions_Methods"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Affiliations.fk_Affiliations_People"/>
+    <FkGl bkCl="ff000000" nm="ODM2Core.DataSetsResults.fk_DataSetsResults_DataSets"/>
+    <FkGl bkCl="ff000000" nm="ODM2Core.DataSetsResults.fk_DataSetsResults_Results"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.FeatureActions.fk_FeatureActions_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.FeatureActions.fk_FeatureActions_SamplingFeatures"/>
+    <FkGl bkCl="ff000000" nm="ODM2Core.Methods.fk_Methods_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Organizations.fk_Organizations_Organizations"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.RelatedActions.fk_RelatedActions_Actions"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.RelatedActions.fk_RelatedActions_Actions_AreRelated"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_FeatureActions"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Units"/>
     <FkGl bkCl="ff000000" nm="ODM2Core.Results.fk_Results_Variables"/>
+    <FkGl bkCl="ff000000" nm="ODM2Provenance.RelatedDatasets.fk_RelatedDatasets_DataSets"/>
+    <FkGl bkCl="ff000000" nm="ODM2Provenance.RelatedDatasets.fk_RelatedDatasets_DataSets_AreRelated"/>
+    <FkGl bkCl="ff000000" nm="ODM2Provenance.RelatedResults.fk_RelatedResults_Results"/>
+    <FkGl bkCl="ff000000" nm="ODM2Provenance.RelatedResults.fk_RelatedResults_Results_AreRelated"/>
     <Notes>
       <Note bkCl="ffffffe6" x="2759" y="271">Should a simulation be associated
 with a sampling feature, or just
@@ -2876,9 +2906,8 @@ the simulation.inputs and
 simulation.outputs?</Note>
     </Notes>
     <Zones>
-      <Zone bkCl="ffece9d8" h="358" nm="Missing Conversion.  Is this going to be in ODM2" w="145" x="1006" y="419"/>
-      <Zone bkCl="ffece9d8" h="323" nm="Remove?  " w="124" x="2323" y="30"/>
-      <Zone bkCl="ffece9d8" h="498" nm="TODO: represent generic model metadata.  Maybe some HydroShare stuff in here..." w="117" x="1811" y="37"/>
+      <Zone bkCl="ffece9d8" h="289" nm="Missing Conversion.  Is this going to be in ODM2" w="117" x="924" y="125"/>
+      <Zone bkCl="ffece9d8" h="492" nm="TODO: represent generic model metadata.  Maybe some HydroShare stuff in here..." w="93" x="728" y="0"/>
     </Zones>
   </Dgm>
   <Dgm nm="ODM2Annotations">
@@ -3180,8 +3209,6 @@ VerticalDatumCV</Note>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.InstrumentOutputVariables.fk_InstrumentOutputVariables_Units"/>
     <FkGl bkCl="ff000000" nm="ODM2Equipment.InstrumentOutputVariables.fk_InstrumentOutputVariables_Variables"/>
     <Notes>
-      <Note bkCl="ffffffe6" x="29" y="72">Look at SensorML
-Make sure this fits!</Note>
       <Note bkCl="ffffffe6" x="369" y="526">Equipment are often specified by ObservationActions to 
 make measurements (i.e Results).
 
@@ -3194,6 +3221,8 @@ An Instrument Calibration Action could either be:
 - an ObservationAction (if it produces a Result from 
     a ReferenceMaterial Specimen), or
 - an EquipmentMaintenanceAction (if it does not).</Note>
+      <Note bkCl="ffffffe6" x="29" y="72">Look at SensorML
+Make sure this fits!</Note>
     </Notes>
     <Zones/>
   </Dgm>
@@ -3705,7 +3734,7 @@ then  additional field are added
     </Notes>
     <Zones/>
   </Dgm>
-  <RnmMgr NxRnmId="458">
+  <RnmMgr NxRnmId="459">
     <RnmCh ObjCls="Schema" ParCls="Database" ParNme="ODM2" SupCls="" SupNme="">
       <Rnm id="1" nNm="ODM2Core" oNm="schemaA"/>
     </RnmCh>
@@ -4693,7 +4722,7 @@ then  additional field are added
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="Simulation.Output" SupCls="Schema" SupNme="ODM2 Simulation">
       <Rnm id="412" nNm="OutputId" oNm="Id"/>
     </RnmCh>
-    <RnmCh ObjCls="Column" ParCls="Table" ParNme="Model" SupCls="Schema" SupNme="ODM2 Simulation">
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="Models" SupCls="Schema" SupNme="ODM2 Simulation">
       <Rnm id="413" nNm="ModelID" oNm="Id"/>
     </RnmCh>
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="Group" SupCls="Schema" SupNme="ODM2 Simulation">
@@ -4802,6 +4831,9 @@ then  additional field are added
     <RnmCh ObjCls="Column" ParCls="Table" ParNme="Simulations" SupCls="Schema" SupNme="ODM2 Simulation">
       <Rnm id="457" nNm="SimulationID" oNm="SimulationActionID"/>
     </RnmCh>
+    <RnmCh ObjCls="Table" ParCls="Schema" ParNme="ODM2 Simulation" SupCls="" SupNme="">
+      <Rnm id="458" nNm="Models" oNm="Model"/>
+    </RnmCh>
   </RnmMgr>
   <DbDocOptionMgr>
     <BasicOptionMgr>
@@ -4819,25 +4851,17 @@ then  additional field are added
     </BasicOptionMgr>
   </DbDocOptionMgr>
   <OpenEditors>
-    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Results" selected="0"/>
-    <OpenEditor ClsNm="Diagram" fqn="null.ODM2SamplingFeatures" selected="0"/>
-    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Core" selected="0"/>
     <OpenEditor ClsNm="Diagram" fqn="null.ODM2Sensors" selected="0"/>
+    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Core" selected="0"/>
+    <OpenEditor ClsNm="Diagram" fqn="null.ODM2Results" selected="0"/>
     <OpenEditor ClsNm="Diagram" fqn="null.ODM2 Simulation" selected="1"/>
+    <OpenEditor ClsNm="Diagram" fqn="null.ODM2SamplingFeatures" selected="0"/>
   </OpenEditors>
   <TreePaths>
     <TreePath/>
     <TreePath>/Schemas (13)</TreePath>
     <TreePath>/Schemas (13)/ODM2 Simulation</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Model</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Model/Foreign Keys (0)</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulation.Input</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulation.Input/Foreign Keys (0)</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulation.SamplingFeatures</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulation.SamplingFeatures/Foreign Keys (0)</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulations</TreePath>
-    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (8)/Simulations/Foreign Keys (1)</TreePath>
+    <TreePath>/Schemas (13)/ODM2 Simulation/Tables (7)</TreePath>
     <TreePath>/Diagrams (14)</TreePath>
   </TreePaths>
 </Db>
