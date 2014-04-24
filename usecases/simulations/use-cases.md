@@ -6,6 +6,7 @@ This document outlines the desirable functionality of the Simulations extension 
 * [Find the ActionID of a Simulation](#find-the-actionid-of-a-simulation)
 * [Find all Children of a Simulation](#find-all-children-of-a-simulation)
 * [Find all Grandchildren of Parent Simulation](#find-all-grandchildren-of-parent-simulation) 
+* [Find all Descendants of a Simulation](#find-all-descendants-of-a-simulation)
 
 ---
 
@@ -84,7 +85,6 @@ Click to see an [example](http://sqlfiddle.com/#!15/7d62e/4)!
 ---
 
 ### Find all Descendants of a Simulation
-<a name=""></a> 
 The actor wants to find all simulations that are descendants of the same parent simulation, or all descendants of all root simulations.  To be considered a root simulation, the database record must not implement the RelatedActions table, i.e. it has not related actions.  The primary use of this functionality is to  discover all simulation records in the database and display them hierarchically using client side software.
 
 ***Find all descendants for all root simulations***
@@ -113,61 +113,30 @@ select * from parents;
 |SIMULATIONNAME | ACTIONID | RELATIONSHIPTYPECV | RELATEDACTIONID | DEPTH |PATH |
 |:---|:---|:---|:---|:---|:---|
 |Parent Simulation | 1 |(null) | (null) | 1 | 1 |
-|Child Simulation  |1 |  2 | child |1 |2 | 1,2|
-|Grandchild Simulation | 1 | 3 |child |2 |3 |1,2,3|
-|Grandchild Simulation | 2 | 4 | child |2 |3 |1,2,4|
+|Child Simulation 1 |  2 | child |1 |2 | 1,2|
+|Grandchild Simulation 1 | 3 |child |2 |3 |1,2,3|
+|Grandchild Simulation 2 | 4 | child |2 |3 |1,2,4|
 
 
-***Find all descendants of a specific actionid***
-
-| Table | Column | Value |
-|:---|:---|:---|
-|actions | actionid | 2 |
-
-```sql
-with recursive parents(simulationname,relationid,actionid,relationshiptypecv,relatedactionid,depth,path) 
-AS (
-    select s.simulationname, ra.relationid, ra.actionid, ra.relationshiptypecv, ra.relatedactionid, 1::INT as depth, array[a.actionid] as path
-    from simulations s
-    join actions a on a.actionid = s.actionid
-    join relatedactions ra on ra.actionid = a.actionid
-    where ra.relatedactionid = 2
-
-    union all
-
-    select p.simulationname,r.relationid, r.actionid, r.relationshiptypecv, r.relatedactionid, p.depth + 1 as depth, (p.path || r.actionid)
-    from parents as p, relatedactions as r
-    where r.relatedactionid = p.actionid
-  )
-select * from parents;
-```
-
-Click to see an [example](http://sqlfiddle.com/#!15/7d62e/107)!
+Click to see an [example](http://sqlfiddle.com/#!15/7d62e/111)!
 
 ### Select Geometry of Simulation Result
-<a name=""></a> 
 The actor wants to determine all geometries of a simulation output Variable.
 
 ### Select Simulation Inputs
-<a name=""></a> 
 The actor wants to select all input Variables and Units for a specific simulation.
 
 ### Select Simulation Outputs
-<a name=""></a> 
 The actor wants to find all simulation output variables and units that were produced by a simulation.
 
 ### Update Input DataSet
-<a name=""></a> 
 The actor wants to associate a Results measurement as an input to a simulation.
 
 ### Select Simulation Parameters
-<a name=""></a> 
 The actor wants to select all input parameters and their values for a specific simulation.
 
 ### Find all Simulations Created by an Organization
-<a name=""></a> 
 The actor wants to discover all simulations published by an organization by name
 
 ### Find all Simulations that have Variable Output
-<a name=""></a> 
 The actor wants to find all simulations that produce an output of type Variable and Unit.
