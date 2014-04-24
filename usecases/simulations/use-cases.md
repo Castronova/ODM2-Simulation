@@ -1,11 +1,12 @@
-## Description
-This document outlines the desirable functionality of the Simulations extension through common SQL queries.  The goal of the document is to identify common SQL queries that will be used to interact with the database to ensure that they will be made possible.
+## Standard Use Cases for the ODM2 Simulations Extension 
+ The goal of the document is to identify and catalog the desired functionality of the simulations database extension and provide SQL queries to verify that this functionality is possible.  These use cases will form the basis of a unit testing framework to ensure that modifications  to the ODM2 database schema do not break the desired functionality of the simulations extension. 
+
+***Note:*** All SQL examples are performed using a PostgreSQL 9.3.1 database.
 
 ### Index
 
 * [Find the ActionID of a Simulation](#find-the-actionid-of-a-simulation)
 * [Find all Children of a Simulation](#find-all-children-of-a-simulation)
-* [Find all Grandchildren of Parent Simulation](#find-all-grandchildren-of-parent-simulation) 
 * [Find all Descendants of a Simulation](#find-all-descendants-of-a-simulation)
 
 ---
@@ -13,7 +14,7 @@ This document outlines the desirable functionality of the Simulations extension 
 
 
 ### Find the ActionID of a Simulation
-A user wants to identify the Action associated with a particular simulation instance.  This is an initial first step for discovering simulation results.  In the example below, *begindatetime* in not required, however its inclusion helps distinguish between simulations that may have the same *simulationname*.
+A user wants to identify the Action associated with a particular simulation instance.  This is a procedure that is likely required prior to querying simulation results.  Querying simulation results will be a core operation used by client-side software to couple model inputs and outputs. In the example below, *begindatetime* in not required, however its inclusion helps distinguish between simulations that may have the same *simulationname*.
 
 | DB Table | Column Name| Value |
 |:---|:---|:---|
@@ -27,7 +28,7 @@ WHERE s.SimulationName = "Logan SWMM Model" AND a.BeginDateTime = "2014-04-22 12
 ```
 ---
 ### Find all Children of a Simulation
-The user wants to identify all simulations that have been produced as children of a specific model.  This operation enables a user to quickly find all simulations that are derived from a parent simulation.  This task would be particularly useful when comparing multiple model simulations that have been developed for the same study. 
+The user wants to identify all simulations that have been produced as children of a specific model.  This operation provides the ability to quickly find all simulations that are derived from a parent simulation, which will likely be implemented in client-side software.  This task will be particularly useful for comparing multiple model simulations that have been developed for the same study area. 
 
 Given:
 
@@ -51,6 +52,7 @@ where ra.relationshiptypecv = 'child' and ra.relatedactionid =
 Click to see an [example](http://sqlfiddle.com/#!15/a86db/1)!
 
 
+<!-- 
 ---
 ### Find all Grandchildren of Parent Simulation
 The actor selects all simulations that are grandchildren of the same parent simulation.
@@ -80,7 +82,7 @@ where ra.relationshiptypecv = 'child' and ra.relatedactionid =
 ```
 
 Click to see an [example](http://sqlfiddle.com/#!15/7d62e/4)!
-
+-->
 
 ---
 
@@ -120,14 +122,41 @@ select * from parents;
 
 Click to see an [example](http://sqlfiddle.com/#!15/7d62e/111)!
 
+---
 ### Select Geometry of Simulation Result
 The actor wants to determine all geometries of a simulation output Variable.
 
+---
 ### Select Simulation Inputs
 The actor wants to select all input Variables and Units for a specific simulation.
 
+---
 ### Select Simulation Outputs
-The actor wants to find all simulation output variables and units that were produced by a simulation.
+The actor wants to find all simulation output variables and units that were produced by a simulation.  The discovery of simulation outputs (i.e. calculations) will be necessary to successfully couple models.  This operation will be performed by client-side software and provide the actor with the ability to link output datasets to simulations input.
+
+Given:
+
+| Table | Column | Value |
+|:---|:---|:---|
+|Simulations | SimulationName | Logan SWMM Model |
+
+```sql
+select v.variablenamecv, u.unitsname, u.unitsabbreviation
+from results as r
+full join variables v on v.variableid = r.variableid
+full join units u on u.unitsid = r.unitsid
+where r.featureactionid = 
+(
+  select a.actionid
+  from actions a
+  join simulations s on a.actionid = s.actionid
+  join featureactions fa on fa.actionid = a.actionid
+  where s.simulationname = 'SWMM simulation for Logan UT'
+);
+
+```
+
+Click to see an [example](http://sqlfiddle.com/#!15/2cef5/1)!
 
 ### Update Input DataSet
 The actor wants to associate a Results measurement as an input to a simulation.
