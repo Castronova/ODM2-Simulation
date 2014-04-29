@@ -1,0 +1,337 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+  color:#444;
+  font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman',
+              "Hiragino Sans GB", "STXihei", "微软雅黑", serif;
+  font-size:12px;
+  line-height:1.5em;
+  background:#fefefe;
+  width: 45em;
+  margin: 10px auto;
+  padding: 1em;
+  outline: 1300px solid #FAFAFA;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0b0080; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+span.backtick {
+  border:1px solid #EAEAEA;
+  border-radius:3px;
+  background:#F8F8F8;
+  padding:0 3px 0 3px;
+}
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+margin:1em 0;
+}
+
+img{
+max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+color:#111;
+line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:2em; border-bottom:1px solid silver; padding-bottom: 5px; }
+h3{ font-size:1.5em; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+color:#666666;
+margin:0;
+padding-left: 3em;
+border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+
+
+pre , code, kbd, samp { 
+  color: #000; 
+  font-family: monospace; 
+  font-size: 0.88em; 
+  border-radius:3px;
+  background-color: #F8F8F8;
+  border: 1px solid #CCC; 
+}
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px 12px;}
+pre code { border: 0px !important; padding: 0;}
+code { padding: 0 3px 0 3px; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+body{font-size:16px;}
+}
+
+@media print {
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  body{font-size:12pt; max-width:100%; outline:none;}
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page :left { margin: 15mm 20mm 15mm 10mm; }
+  @page :right { margin: 15mm 10mm 15mm 20mm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}
+</style><title>use-cases</title></head><body><h2 id="standard-use-cases-for-the-odm2-simulations-extension">Standard Use Cases for the ODM2 Simulations Extension</h2>
+<p>The goal of the document is to identify and catalog the desired functionality of the simulations database extension and provide SQL queries to verify that this functionality is possible.  These use cases will form the basis of a unit testing framework to ensure that modifications  to the ODM2 database schema do not break the desired functionality of the simulations extension. </p>
+<p><strong><em>Note:</em></strong> All SQL examples are performed using a PostgreSQL 9.3.1 database.</p>
+<h3 id="index">Index</h3>
+<ul>
+<li><a href="#find-the-actionid-of-a-simulation">Find the ActionID of a Simulation</a></li>
+<li><a href="#find-all-children-of-a-simulation">Find all Children of a Simulation</a></li>
+<li><a href="#find-all-descendants-of-a-simulation">Find all Descendants of a Simulation</a></li>
+</ul>
+<hr />
+<h3 id="find-the-actionid-of-a-simulation">Find the ActionID of a Simulation</h3>
+<p>A user wants to identify the Action associated with a particular simulation instance.  This is a procedure that is likely required prior to querying simulation results.  Querying simulation results will be a core operation used by client-side software to couple model inputs and outputs. In the example below, <em>begindatetime</em> in not required, however its inclusion helps distinguish between simulations that may have the same <em>simulationname</em>.</p>
+<table>
+<thead>
+<tr>
+<th align="left">DB Table</th>
+<th align="left">Column Name</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Simulations</td>
+<td align="left">SimulationName</td>
+<td align="left">Logan SWMM Model</td>
+</tr>
+<tr>
+<td align="left">Actions</td>
+<td align="left">BeginDateTime</td>
+<td align="left">2014-04-22 12:55:00</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="sql">SELECT a.ActionID FROM Actions a
+JOIN Simulations s ON s.ActionID = a.ActionID
+WHERE s.SimulationName = &quot;Logan SWMM Model&quot; AND a.BeginDateTime = &quot;2014-04-22 12:55:00&quot;
+</code></pre>
+
+<hr />
+<h3 id="find-all-children-of-a-simulation">Find all Children of a Simulation</h3>
+<p>The user wants to identify all simulations that have been produced as children of a specific model.  This operation provides the ability to quickly find all simulations that are derived from a parent simulation, which will likely be implemented in client-side software.  This task will be particularly useful for comparing multiple model simulations that have been developed for the same study area. </p>
+<p>Given:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Table</th>
+<th align="left">Column</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Simulations</td>
+<td align="left">SimulationName</td>
+<td align="left">Logan SWMM Model</td>
+</tr>
+<tr>
+<td align="left">RelatedActions</td>
+<td align="left">RelationshipTypeCV</td>
+<td align="left">child</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="sql">select s.simulationid, s.simulationname from simulations s
+join actions a on a.actionid = s.actionid
+join relatedactions ra on ra.actionid = a.actionid 
+where ra.relationshiptypecv = 'child' and ra.relatedactionid =
+  (
+  select a.actionid from actions a
+  join simulations s on s.actionid = a.actionid
+  where s.simulationname = 'Logan City SWMM Simulation'
+  ) ;
+</code></pre>
+
+<p>Click to see an <a href="http://sqlfiddle.com/#!15/a86db/1">example</a>!</p>
+<!-- 
+---
+### Find all Grandchildren of Parent Simulation
+The actor selects all simulations that are grandchildren of the same parent simulation.
+
+Given:
+
+| Table | Column | Value |
+|:---|:---|:---|
+|Simulations | SimulationName | Logan SWMM Model |
+|RelatedActions | RelationshipTypeCV | child |
+
+
+wzxhzdk:2
+
+
+Click to see an [example](http://sqlfiddle.com/#!15/7d62e/4)!
+-->
+
+<hr />
+<h3 id="find-all-descendants-of-a-simulation">Find all Descendants of a Simulation</h3>
+<p>The actor wants to find all simulations that are descendants of the same parent simulation, or all descendants of all root simulations.  To be considered a root simulation, the database record must not implement the RelatedActions table, i.e. it has not related actions.  The primary use of this functionality is to  discover all simulation records in the database and display them hierarchically using client side software.</p>
+<p><strong><em>Find all descendants for all root simulations</em></strong></p>
+<pre><code class="sql">with recursive parents(simulationname,actionid,relationshiptypecv,relatedactionid, depth,path)
+AS (
+    select s.simulationname, a.actionid, ra.relationshiptypecv, ra.relatedactionid, 1::INT as depth, array[a.actionid] as path
+    from simulations s
+    join actions a on a.actionid = s.actionid
+    left join relatedactions ra on ra.actionid = a.actionid -- Use left join to keep nulled fields
+    where ra.relatedactionid is null -- All root models will have a null relatedactionid
+
+    union all
+
+    select s.simulationname, r.actionid, r.relationshiptypecv, r.relatedactionid, p.depth + 1 as depth, (p.path || r.actionid)
+    from parents as p, simulations as s
+    join actions a on a.actionid = s.actionid
+    join relatedactions r on r.actionid = a.actionid
+    where r.relatedactionid = p.actionid
+  )
+select * from parents;
+</code></pre>
+
+<p><em>Sample Results</em></p>
+<table>
+<thead>
+<tr>
+<th align="left">SIMULATIONNAME</th>
+<th align="left">ACTIONID</th>
+<th align="left">RELATIONSHIPTYPECV</th>
+<th align="left">RELATEDACTIONID</th>
+<th align="left">DEPTH</th>
+<th align="left">PATH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Parent Simulation</td>
+<td align="left">1</td>
+<td align="left">(null)</td>
+<td align="left">(null)</td>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">Child Simulation 1</td>
+<td align="left">2</td>
+<td align="left">child</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="left">1,2</td>
+</tr>
+<tr>
+<td align="left">Grandchild Simulation 1</td>
+<td align="left">3</td>
+<td align="left">child</td>
+<td align="left">2</td>
+<td align="left">3</td>
+<td align="left">1,2,3</td>
+</tr>
+<tr>
+<td align="left">Grandchild Simulation 2</td>
+<td align="left">4</td>
+<td align="left">child</td>
+<td align="left">2</td>
+<td align="left">3</td>
+<td align="left">1,2,4</td>
+</tr>
+</tbody>
+</table>
+<p>Click to see an <a href="http://sqlfiddle.com/#!15/7d62e/111">example</a>!</p>
+<hr />
+<h3 id="select-geometry-of-simulation-result">Select Geometry of Simulation Result</h3>
+<p>The actor wants to determine all geometries of a simulation output Variable.</p>
+<hr />
+<h3 id="select-simulation-inputs">Select Simulation Inputs</h3>
+<p>The actor wants to select all input Variables and Units for a specific simulation.</p>
+<hr />
+<h3 id="select-simulation-outputs">Select Simulation Outputs</h3>
+<p>The actor wants to find all simulation output variables and units that were produced by a simulation.  The discovery of simulation outputs (i.e. calculations) will be necessary to successfully couple models.  This operation will be performed by client-side software and provide the actor with the ability to link output datasets to simulations input.</p>
+<p>Given:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Table</th>
+<th align="left">Column</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Simulations</td>
+<td align="left">SimulationName</td>
+<td align="left">Logan SWMM Model</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="sql">select v.variablenamecv, u.unitsname, u.unitsabbreviation
+from results as r
+full join variables v on v.variableid = r.variableid
+full join units u on u.unitsid = r.unitsid
+where r.featureactionid = 
+(
+  select a.actionid
+  from actions a
+  join simulations s on a.actionid = s.actionid
+  join featureactions fa on fa.actionid = a.actionid
+  where s.simulationname = 'SWMM simulation for Logan UT'
+);
+
+</code></pre>
+
+<p>Click to see an <a href="http://sqlfiddle.com/#!15/2cef5/1">example</a>!</p>
+<h3 id="update-input-dataset">Update Input DataSet</h3>
+<p>The actor wants to associate a Results measurement as an input to a simulation.</p>
+<h3 id="select-simulation-parameters">Select Simulation Parameters</h3>
+<p>The actor wants to select all input parameters and their values for a specific simulation.</p>
+<h3 id="find-all-simulations-created-by-an-organization">Find all Simulations Created by an Organization</h3>
+<p>The actor wants to discover all simulations published by an organization by name</p>
+<h3 id="find-all-simulations-that-have-variable-output">Find all Simulations that have Variable Output</h3>
+<p>The actor wants to find all simulations that produce an output of type Variable and Unit.</p></body></html>
