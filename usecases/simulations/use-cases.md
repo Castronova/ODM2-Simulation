@@ -124,7 +124,23 @@ Click to see an [example](http://sqlfiddle.com/#!15/7d62e/111)!
 
 ---
 ### Select Geometry of Simulation Result
-The actor wants to determine all geometries of a simulation output Variable.
+The actor wants to determine all geometries of a simulation output Variable.  This is useful for discovering the elemenset of a particular simulation, e.g. a set of subbasin polygons.  This operation will most likely be used to visualize the spatial attribute model calculations when coupling.
+
+Given:
+
+| Table | Column | Value |
+|:---|:---|:---|
+|Simulations | SimulationName | Logan SWMM Model |
+
+```sql
+select s.simulationname, AsText(sf.featuregeometry), Area(sf.featuregeometry)
+from actions a
+join simulations s on a.actionid = s.actionid
+join featureactions fa on fa.actionid = a.actionid
+join samplingfeatures sf on fa.samplingfeatureid = sf.samplingfeatureid;
+```
+
+Click to see an [example](http://sqlfiddle.com/#!9/8d739/1)!
 
 ---
 ### Select Simulation Inputs
@@ -169,3 +185,12 @@ The actor wants to discover all simulations published by an organization by name
 
 ### Find all Simulations that have Variable Output
 The actor wants to find all simulations that produce an output of type Variable and Unit.
+
+### Convert Units of DataValue to Match Input
+The actor wants to select input data values and perform a unit conversion on them so that they align with the desired input
+
+### Spatial transformation of DataValues
+The actor wants to transform data values from previously calculated locations (i.e. existing simulation output) to the desired input locations.  For example, rainfall measurements to a spatial average over polygons regions.
+
+### Temporal transformation of DataValues
+The actor wants to perform a temporal transformation on results that do not temporally align with the desired time steps.  For example, a model that operates on a daily timestep would need to aggregate hourly measurements.

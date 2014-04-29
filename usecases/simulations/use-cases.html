@@ -287,7 +287,32 @@ select * from parents;
 <p>Click to see an <a href="http://sqlfiddle.com/#!15/7d62e/111">example</a>!</p>
 <hr />
 <h3 id="select-geometry-of-simulation-result">Select Geometry of Simulation Result</h3>
-<p>The actor wants to determine all geometries of a simulation output Variable.</p>
+<p>The actor wants to determine all geometries of a simulation output Variable.  This is useful for discovering the elemenset of a particular simulation, e.g. a set of subbasin polygons.  This operation will most likely be used to visualize the spatial attribute model calculations when coupling.</p>
+<p>Given:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Table</th>
+<th align="left">Column</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Simulations</td>
+<td align="left">SimulationName</td>
+<td align="left">Logan SWMM Model</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="sql">select s.simulationname, AsText(sf.featuregeometry), Area(sf.featuregeometry)
+from actions a
+join simulations s on a.actionid = s.actionid
+join featureactions fa on fa.actionid = a.actionid
+join samplingfeatures sf on fa.samplingfeatureid = sf.samplingfeatureid;
+</code></pre>
+
+<p>Click to see an <a href="http://sqlfiddle.com/#!9/8d739/1">example</a>!</p>
 <hr />
 <h3 id="select-simulation-inputs">Select Simulation Inputs</h3>
 <p>The actor wants to select all input Variables and Units for a specific simulation.</p>
@@ -334,4 +359,10 @@ where r.featureactionid =
 <h3 id="find-all-simulations-created-by-an-organization">Find all Simulations Created by an Organization</h3>
 <p>The actor wants to discover all simulations published by an organization by name</p>
 <h3 id="find-all-simulations-that-have-variable-output">Find all Simulations that have Variable Output</h3>
-<p>The actor wants to find all simulations that produce an output of type Variable and Unit.</p></body></html>
+<p>The actor wants to find all simulations that produce an output of type Variable and Unit.</p>
+<h3 id="convert-units-of-datavalue-to-match-input">Convert Units of DataValue to Match Input</h3>
+<p>The actor wants to select input data values and perform a unit conversion on them so that they align with the desired input</p>
+<h3 id="spatial-transformation-of-datavalues">Spatial transformation of DataValues</h3>
+<p>The actor wants to transform data values from previously calculated locations (i.e. existing simulation output) to the desired input locations.  For example, rainfall measurements to a spatial average over polygons regions.</p>
+<h3 id="temporal-transformation-of-datavalues">Temporal transformation of DataValues</h3>
+<p>The actor wants to perform a temporal transformation on results that do not temporally align with the desired time steps.  For example, a model that operates on a daily timestep would need to aggregate hourly measurements.</p></body></html>
