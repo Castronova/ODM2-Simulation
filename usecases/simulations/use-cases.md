@@ -140,7 +140,7 @@ join featureactions fa on fa.actionid = a.actionid
 join samplingfeatures sf on fa.samplingfeatureid = sf.samplingfeatureid;
 ```
 
-Click to see an [example](http://sqlfiddle.com/#!9/8d739/1)!
+Click to see a MySQL [example](http://sqlfiddle.com/#!9/8d739/1)!
 
 ---
 ### Select Simulation Inputs
@@ -180,8 +180,54 @@ The actor wants to associate a Results measurement as an input to a simulation.
 ### Select Simulation Parameters
 The actor wants to select all input parameters and their values for a specific simulation.
 
+### Find all Simulations Created by an User
+The actor wants to discover all simulations published by a user.  This will be useful when populating all the simulations created by a user (possibly in a web framework)
+
+Given:
+
+| Table | Column | Value |
+|:---|:---|:---|
+|People | PersonFirstName | Tony |
+|People | PersonLastName | Castronova |
+
+```sql
+select s.simulationid, s.simulationName
+from simulations s
+join actions a on a.actionid = s.actionid
+join actionby ab on ab.actionid = a.actionid
+join affiliations af on af.affiliationid = ab.affiliationid
+join organizations org on org.organizationid = af.organizationid
+join people p on p.personid = af.personid
+where p.personfirstname ='Tony' and p.personlastname='Castronova'
+```
+
+Click to see a MySQL [example](http://sqlfiddle.com/#!9/cd9f0/2)!
+
 ### Find all Simulations Created by an Organization
-The actor wants to discover all simulations published by an organization by name
+The actor wants to discover all simulations published by an organization by name.  This will be useful when populating all the simulations created by an organization (possibly in a web framework)
+
+Given:
+
+| Table | Column | Value |
+|:---|:---|:---|
+|Organization | OrganizationName | Utah State University |
+
+```sql
+select  s.simulationid as 'ID' ,
+        s.simulationName as 'Simulation Name', 
+        concat(p.personfirstname,' ',p.personlastname) as 'Author Name',
+        a.begindatetime as 'Date Created'
+from simulations as s
+join actions a on a.actionid = s.actionid
+join actionby ab on ab.actionid = a.actionid
+join affiliations af on af.affiliationid = ab.affiliationid
+join organizations org on org.organizationid = af.organizationid
+join people p on p.personid = af.personid
+where org.organizationname = 'Utah State University'
+order by p.personlastname asc;
+```
+
+Click to see a MySQL [example](http://sqlfiddle.com/#!9/df19c/26)!
 
 ### Find all Simulations that have Variable Output
 The actor wants to find all simulations that produce an output of type Variable and Unit.
